@@ -6,25 +6,73 @@ import edu.princeton.cs.introcs.StdDraw;
 
 public class Game {
 	
+	private Snake snake;
+	private Food food;
+	private int score;
+
+	
 	public Game() {
 		StdDraw.enableDoubleBuffering();
+		snake = new Snake();
+		food = new Food();
+		score = 0;
 		
-		//FIXME - construct new Snake and Food objects
+		
 	}
 	
+	
 	public void play() {
-		while (true) { //TODO: Update this condition to check if snake is in bounds
-			int dir = getKeypress();
-			//Testing only: you will eventually need to do more work here
-			System.out.println("Keypress: " + dir);
-			
-			/*
-			 * 1. Pass direction to your snake
-			 * 2. Tell the snake to move
-			 * 3. If the food has been eaten, make a new one
-			 * 4. Update the drawing
-			 */
-		}
+	    showIntroScreen(); 
+
+	    while (snake.isInbounds()) {
+	        int dir = getKeypress();
+	        if (dir != -1) {
+	            snake.changeDirection(dir);
+	        }
+
+	        snake.move();
+
+	        if (snake.eatFood(food)) {
+	            food = new Food();
+	            score++;
+	        }
+
+	        updateDrawing();
+	    }
+
+	    // Game over screen
+	    StdDraw.clear();
+	    StdDraw.setPenColor(StdDraw.BLACK);
+	    StdDraw.setFont(new java.awt.Font("Arial", java.awt.Font.BOLD, 30));
+	    StdDraw.text(0.5, 0.6, "Game Over");
+
+	    StdDraw.setFont(new java.awt.Font("Arial", java.awt.Font.PLAIN, 20));
+	    StdDraw.text(0.5, 0.5, "Final Score: " + score);
+
+	    StdDraw.show();
+	    StdDraw.pause(3000);
+	    System.exit(0);
+	}
+	
+	private void showIntroScreen() {
+	    StdDraw.clear();
+	    StdDraw.setPenColor(StdDraw.BLACK);
+
+	    StdDraw.setFont(new java.awt.Font("Arial", java.awt.Font.BOLD, 30));
+	    StdDraw.text(0.5, 0.65, "Welcome to Snake");
+
+	    StdDraw.setFont(new java.awt.Font("Arial", java.awt.Font.PLAIN, 20));
+	    StdDraw.text(0.5, 0.55, "Use W (up), A (left), S (down), D (right)");
+
+	    StdDraw.text(0.5, 0.45, "Press any key to start...");
+
+	    StdDraw.show();
+
+	    // Wait for any key press
+	    while (!StdDraw.hasNextKeyTyped()) {
+	        // just wait
+	    }
+	    StdDraw.nextKeyTyped(); // consume the key press
 	}
 	
 	private int getKeypress() {
@@ -45,7 +93,15 @@ public class Game {
 	 * Clears the screen, draws the snake and food, pauses, and shows the content
 	 */
 	private void updateDrawing() {
-		//FIXME
+		StdDraw.clear();
+		snake.draw();
+		food.draw();
+		
+		StdDraw.setPenColor(StdDraw.BLACK);
+		StdDraw.textLeft(0.02, 0.98, "Score: " + score);
+		
+		StdDraw.pause(50); // Control speed
+		StdDraw.show();//FIXME
 		
 		/*
 		 * 1. Clear screen
@@ -60,3 +116,4 @@ public class Game {
 		g.play();
 	}
 }
+

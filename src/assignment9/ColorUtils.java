@@ -20,4 +20,5 @@ public class ColorUtils {
 	public static Color transparentColor() {
 		return transparent(solidColor());
 	}
+
 }
